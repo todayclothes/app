@@ -38,8 +38,14 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
             .map((data) => ClothesChoice.fromJson(data))
             .toList();
       } else if (_selectedTabIndex == 2) {
-        // Fetch liked clothes
-        // Add your code here to fetch liked clothes choices
+        final jsonData = await APIClient.getClothesLike(
+          size: 20,
+          lastClothesChoiceId: _tabItems[2].isNotEmpty ? _tabItems[2].last.id : 0,
+        );
+
+        newChoices = (jsonData['content'] as List)
+            .map((data) => ClothesChoice.fromJson(data))
+            .toList();
       } else {
         final jsonData = await APIClient.getClothesMyChoices(
           size: 20,
@@ -58,6 +64,7 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
       print('Failed to fetch clothes choices: $e');
     }
   }
+
 
 
 
@@ -214,7 +221,12 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
           setState(() {
             clothing.isLiked = !clothing.isLiked;
           });
-          // Add your code here to handle the like functionality
+
+          if (clothing.isLiked) {
+            APIClient.createLike(clothing.id); // 좋아요 추가
+          } else {
+            APIClient.deleteLike(clothing.likeId); // 좋아요 삭제
+          }
         },
       ),
       onTap: () {
@@ -222,7 +234,6 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
       },
     );
   }
-
 
 
   void _showImageDialog(String topImageUrl, String bottomImageUrl) {
@@ -244,7 +255,5 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
       },
     );
   }
-
-
 
 }

@@ -32,7 +32,6 @@ class APIClient {
     if (response.statusCode == 200) {
       return true;
       print('회원가입 성공');
-
     } else {
       print('회원가입 실패: 오류 코드 -> ${response.statusCode} ');
       return false; // 로그인 실패
@@ -149,7 +148,6 @@ class APIClient {
       body: body,
     );
 
-
     if (response.statusCode == 200) {
       print('이메일 전송 완료');
     } else {
@@ -162,10 +160,7 @@ class APIClient {
 
     final url = Uri.parse('$baseURL/api/auth/email/auth-key/check');
     final headers = {'Content-Type': 'application/json'};
-    final body = jsonEncode({
-      'email': email,
-      'authKey': key
-    });
+    final body = jsonEncode({'email': email, 'authKey': key});
 
     final response = await http.post(
       url,
@@ -182,14 +177,12 @@ class APIClient {
     }
   }
 
-  static Future<bool> submitAdditionalInfo (int regionNum, String gender) async {
-
+  static Future<bool> submitAdditionalInfo(int regionNum, String gender) async {
     print('============ Start submit Additional Info==============');
 
-    if(gender == "여성"){
+    if (gender == "여성") {
       gender = "FEMALE";
-    }
-    else{
+    } else {
       gender = "MALE";
     }
 
@@ -226,7 +219,6 @@ class APIClient {
     }
   }
 
-
   // ================ Weather Method =================== //
 
   static Future<List<dynamic>> getWeatherData(DateTime now) async {
@@ -252,7 +244,7 @@ class APIClient {
       print(jsonData);
       return jsonData;
     } else {
-      print('실패: 오류 코드 -> ${response.statusCode} ');
+      print('Get Weather Data 실패 -> ${response.statusCode} ');
       throw Exception('Failed to fetch weather data');
     }
   }
@@ -284,7 +276,7 @@ class APIClient {
       final jsonData = jsonDecode(utf8Body);
       return jsonData;
     } else {
-      print('실패: 오류 코드 -> ${response.statusCode} ');
+      print('Get Clothes Data 실패: 오류 코드 -> ${response.statusCode} ');
       throw Exception('Failed to fetch Clothes data');
     }
   }
@@ -442,6 +434,7 @@ class APIClient {
 
   static Future<void> createSchedule(
       DateTime now, String title, int timeOfDay) async {
+
     print('============ Start Create Schedule Data ==============');
 
     String dateString = now.toString();
@@ -490,4 +483,55 @@ class APIClient {
   }
 
   // ================ Like Method =================== //
+
+  static Future<void> createLike(int id) async {
+
+    print('============ Start Create Like ==============');
+    final url = Uri.parse('$baseURL/api/clothes/choice/$id/like');
+    final headers = {'Content-Type': 'application/json'};
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token != null) {
+      headers['Cookie'] = 'accessToken=$token';
+      print("Token is Checked!");
+    }
+
+    final response = await http.post(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      print('Create Like Saved!');
+    } else {
+      print('실패: 오류 코드 -> ${response.statusCode} ');
+      throw Exception('Failed to fetch Clothes data');
+    }
+  }
+
+
+  static Future<void> deleteLike(int id) async {
+
+    print('============ Start Delete Like ==============');
+    print('삭제될 like id 는 : $id');
+    final url = Uri.parse('$baseURL/api/clothes/choice/like/$id');
+    final headers = {'Content-Type': 'application/json'};
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token != null) {
+      headers['Cookie'] = 'accessToken=$token';
+      print("Token is Checked!");
+    }
+
+    final response = await http.delete(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      print('Delete Like Saved!');
+    } else {
+      print('실패: 오류 코드 -> ${response.statusCode} ');
+      throw Exception('Failed to fetch Clothes data');
+    }
+  }
+
+
+
 }

@@ -6,7 +6,8 @@ class ClothesChoice {
   final String plan;
   final ClothingChoice topChoice;
   final ClothingChoice bottomChoice;
-  bool isLiked; // 좋아요 상태
+  final int likeId;
+  late bool isLiked; // 좋아요 상태
 
 
   ClothesChoice({
@@ -17,6 +18,7 @@ class ClothesChoice {
     required this.plan,
     required this.topChoice,
     required this.bottomChoice,
+    required this. likeId,
     this.isLiked = false, // 초기값은 좋아요되지 않은 상태로 설정
   });
 
@@ -29,6 +31,7 @@ class ClothesChoice {
       plan: json['plan'],
       topChoice: ClothingChoice.fromJson(json['topChoice']),
       bottomChoice: ClothingChoice.fromJson(json['bottomChoice']),
+      likeId: json['likeId'],
       isLiked: json['isLiked'] ?? false, // JSON 데이터에서 좋아요 상태를 가져옴
     );
   }

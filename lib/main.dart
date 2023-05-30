@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
       ),
       child: MaterialApp(
         title: 'Today Clothes',
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
@@ -67,17 +68,20 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _initializeApp() async {
     await Future.delayed(Duration(seconds: 2)); // 2초 딜레이
 
-    AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
+    AuthProvider authProvider = Provider.of<AuthProvider>(
+        context, listen: false);
     await authProvider.checkLoginStatus();
     LoginState loginState = authProvider.loginState;
     ActiveState activeState = authProvider.activeState;
 
-    if (loginState == LoginState.signedIn && activeState == ActiveState.active) {
+    if (loginState == LoginState.signedIn &&
+        activeState == ActiveState.active) {
       Navigator.pushReplacementNamed(context, '/home');
-    } else if(loginState == LoginState.signedIn && activeState == ActiveState.inActive) {
+    } else if (loginState == LoginState.signedIn &&
+        activeState == ActiveState.inActive) {
       Navigator.pushReplacementNamed(context, '/addInfo');
     }
-    else{
+    else {
       Navigator.pushReplacementNamed(context, '/intro');
     }
   }
@@ -89,8 +93,12 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image(image: AssetImage('lib/assets/images/logo.jpeg')),
-            SizedBox(height: 16),
+            Image(
+              image: AssetImage('lib/assets/images/logo.jpeg'),
+              width: 350, // 로고의 가로 크기를 조정합니다
+              height: 350, // 로고의 세로 크기를 조정합니다
+            ),
+            SizedBox(height: 16), // 이 줄에 세미콜론(;)을 추가합니다
             CircularProgressIndicator(),
           ],
         ),
